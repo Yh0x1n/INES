@@ -21,7 +21,7 @@ class userID(BaseModel, user_generator): # Class for username and ID parameters
 # Main app section
 mainsite = FastAPI()
 
-@mainsite.get("/main") # Test message
+@mainsite.get("/") # Test message
 def testmsg():
     return "Hello! This is the first step for project INES. ^^"
 
