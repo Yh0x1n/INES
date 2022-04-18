@@ -67,7 +67,7 @@ def auth(auth: Auth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
-        user = dubbest_users[auth.email]
+        user = dumbest_users[auth.email]
         print({ 'auth': auth, 'user': user})
         # exists a user with that email
 

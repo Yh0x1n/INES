@@ -2,4 +2,6 @@
 # to install all necesary package
 
 fastapi
-uvicorn[standard]
+uvicorn
+pydantic
+numpy
