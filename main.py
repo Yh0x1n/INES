@@ -41,9 +41,9 @@ def usuario(userid: userID):
     return f"Hello, {userid.nick}! your user ID is {userid.id}."
 
 
-# define a path with post to verify user email and password
 
-dubbest_users = {
+
+dumbest_users = {
     'admin@gmail.com': { 
         "username": 'admin',
         "password": '1234567890'
@@ -64,6 +64,8 @@ class Auth(BaseModel):
 
 @mainsite.post("/auth")
 def auth(auth: Auth):
+    """Verify user email and password, 
+    if both are valid, return a random token"""
     try:
         user = dubbest_users[auth.email]
         print({ 'auth': auth, 'user': user})
@@ -78,8 +80,4 @@ def auth(auth: Auth):
     except KeyError:
         return { 'err': 'email' }    
 
-        
-
-    
-
-# define a path with post to regist a user with email and password
+# TO-DO: define a path with post to regist a user with email and password
