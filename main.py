@@ -4,6 +4,7 @@
 from pydantic import BaseModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Request
 
 import random
 
@@ -25,7 +26,7 @@ mainsite = FastAPI()
 
 mainsite.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -42,34 +43,43 @@ def usuario(userid: userID):
 
 # define a path with post to verify user email and password
 
-dubbest_users = [
-    { 
+dubbest_users = {
+    'admin@gmail.com': { 
         "username": 'admin',
-        "email": 'admin@gmail.com',
         "password": '1234567890'
     },
-    {
-        "username": "douglas",
-        "email": "douglassocorro1@gmail.com",
+    'douglassocorro1@gmail.com': {
+        "username": 'douglas',
         "password": 'onfire1234'
-    }
-]
+    },
+}
+
+def generate_token(): 
+    token = 'some_random_token_12345'
+    return token
+
+class Auth(BaseModel):
+    email: str
+    password: str
 
 @mainsite.post("/auth")
-def auth(email:str, password:str):
-    for data in dubbest_users:
-        if data.email == email:
-            # existe un usuario con ese email
-            if data.password == password:
-                # el email y contraseña coinciden
-                token = generate_token()
-                return { 'token': token }
+def auth(auth: Auth):
+    try:
+        user = dubbest_users[auth.email]
+        print({ 'auth': auth, 'user': user})
+        # exists a user with that email
 
-            return { 'err': 'password' }
-        return { 'err': 'email' }
+        if auth.password == user['password']:
+            # the email and password are valid
+            token = generate_token()
+            return { 'user': user, 'token': token }
 
-@mainsite.get('/exp')
-def exp():
-    return { 'msg': 'hello world!' }
+        return { 'err': 'password' }
+    except KeyError:
+        return { 'err': 'email' }    
+
+        
+
+    
 
 # define a path with post to regist a user with email and password
