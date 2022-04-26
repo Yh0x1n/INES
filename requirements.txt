@@ -5,5 +5,13 @@ fastapi
 uvicorn
 mariadb
 
-pydantic
-numpy
+# for process formularies
+python-multipart
+
+# for encryptation and auth
+python-jose[cryptography]
+passlib[bcrypt]
+
+# pydantic
+# numpy
+
