@@ -12,6 +12,8 @@ python-multipart
 python-jose[cryptography]
 passlib[bcrypt]
 
+# for testing
+requests
 # pydantic
 # numpy
 

@@ -6,6 +6,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import random
 
+import database
+
 class user_generator(): # Class for user ID generator
     upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -25,6 +27,7 @@ class userEmail(BaseModel): #Test To-Do task from line 86
     
 # Main app section
 mainsite = FastAPI()
+db = database.get_db()
 
 mainsite.add_middleware(
     CORSMiddleware,
@@ -89,7 +92,6 @@ def get_user(registA : str = Path(None, description = 'This is the email.'), reg
     return userEmail.email[registA], userEmail.password[registB]"""
     
 class User_register(BaseModel):
-    username: str
     email: str
     password: str
     
@@ -101,22 +103,9 @@ def exists_user(email):
     
 @mainsite.post('/regist')
 def regist_user(data: User_register):
-    if exists_user(data.email):
-        print('the user alredy exists')
-        return { 'err': 'the user alredy exists'}
-    
-    new_user = {
-        "username": data.username,
-        "password": data.password
-        
+    return {
+        'success': False
     }
-    
-    new_user = {
-        data.email: new_user
-    }
-    dumbest_users.update(new_user)
-    print({"users": dumbest_users})
-    return { "msg": "user registed successfully", "new_user": new_user }
 
     
         
