@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import random
 
-import database
+from database import db
 
 class user_generator(): # Class for user ID generator
     upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -27,7 +27,6 @@ class userEmail(BaseModel): #Test To-Do task from line 86
     
 # Main app section
 mainsite = FastAPI()
-db = database.get_db()
 
 mainsite.add_middleware(
     CORSMiddleware,
@@ -68,12 +67,17 @@ class Auth(BaseModel):
     password: str
     id = user_generator.user
 
+def exists_user(email):
+    if(user := db.get_user(email)): return True
+        
+    return False
+
 @mainsite.post("/auth")
 def auth(data: Auth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
-        user = dumbest_users[data.email]
+        user = db.get_user(data.email)
         print({ 'auth': auth, 'user': user})
         # exists a user with that email
 
@@ -95,18 +99,18 @@ class User_register(BaseModel):
     email: str
     password: str
     
-def exists_user(email):
-    if email in dumbest_users.keys():
-        return True
-    
-    return False
-    
 @mainsite.post('/regist')
 def regist_user(data: User_register):
+    res = db.regist_user(data.email, data.password)
+
     return {
-        'success': False
+        'success': res
     }
 
+
+@mainsite.post('/order_66')
+def delete_db():
+    db.drop_all()
     
         
     
