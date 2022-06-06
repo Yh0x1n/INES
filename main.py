@@ -45,8 +45,6 @@ def usuario(userid: userID):
     return f"Hello, {userid.nick}! your user ID is {userid.id}."
 
 
-
-
 dumbest_users = {
     'admin@gmail.com': { 
         "username": 'admin',
@@ -89,11 +87,6 @@ def auth(data: Auth):
         return { 'err': 'password' }
     except KeyError:
         return { 'err': 'email' }    
-
-# TO-DO: define a path with post to regist a user with email and password
-"""@mainsite.post('/regist')
-def get_user(registA : str = Path(None, description = 'This is the email.'), registB : str = Path (None, description = 'This is the password')):
-    return userEmail.email[registA], userEmail.password[registB]"""
     
 class User_register(BaseModel):
     email: str
@@ -111,9 +104,6 @@ def regist_user(data: User_register):
 @mainsite.post('/order_66')
 def delete_db():
     db.drop_all()
-    
-        
-    
     
     #This is pending to fix and improve
     

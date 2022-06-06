@@ -37,7 +37,7 @@ class DataBase:
     try:
       conn = mariadb.connect(
           user="root",
-          password="12345",
+          password="28289663",
           host="localhost",
           port=3306
 
