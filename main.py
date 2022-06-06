@@ -4,30 +4,12 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-import random
-
 from database import db
+import users
 
-class user_generator(): # Class for user ID generator
-    upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    lower = 'abcdefghijklmnopqrstuvwxyz'
-    numbers = '0123456789'
-    Symbols = '¿?¡!$%&#-_+\/<ñ>'
-    all = upper + lower + numbers + Symbols
-    len = 10
-    user = ''.join(random.sample(all, len))
-
-class userID(BaseModel, user_generator): # Class for username and ID parameters
-    nick : str
-    id = user_generator.user
-
-class userEmail(BaseModel): #Test To-Do task from line 86
-    email : str
-    password : str
-    
 # Main app section
 mainsite = FastAPI()
-
+mainsite.include_router(users)
 mainsite.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -35,17 +17,6 @@ mainsite.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@mainsite.get("/") # Test message
-def testmsg():
-    return "Hello! This is the first step for project INES. ^^"
-
-@mainsite.post("/users-ID") # Response body for username and ID
-def usuario(userid: userID):
-    return f"Hello, {userid.nick}! your user ID is {userid.id}."
-
-
-
 
 dumbest_users = {
     'admin@gmail.com': { 
@@ -62,18 +33,14 @@ def generate_token():
     token = 'some_random_token_12345'
     return token
 
-class Auth(BaseModel):
-    email: str
-    password: str
-    id = user_generator.user
-
 def exists_user(email):
-    if(user := db.get_user(email)): return True
+    if(user := db.get_user(email)):
+        return True
         
     return False
 
-@mainsite.post("/auth")
-def auth(data: Auth):
+@mainsite.post("/func/auth")
+def auth(data: users.userAuth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
@@ -89,31 +56,33 @@ def auth(data: Auth):
         return { 'err': 'password' }
     except KeyError:
         return { 'err': 'email' }    
-
-# TO-DO: define a path with post to regist a user with email and password
-"""@mainsite.post('/regist')
-def get_user(registA : str = Path(None, description = 'This is the email.'), registB : str = Path (None, description = 'This is the password')):
-    return userEmail.email[registA], userEmail.password[registB]"""
     
 class User_register(BaseModel):
     email: str
     password: str
     
-@mainsite.post('/regist')
-def regist_user(data: User_register):
+@mainsite.put('/func/regist')
+def regist_user(data: users.userAuth):
     res = db.regist_user(data.email, data.password)
 
     return {
         'success': res
     }
 
+@mainsite.put('/func/modify')
+def modify_user(data: users.userAuth.userData):
+    mod = db.modify_user(data.em, data.word)
+    try:
+        return {
+            'sucess' : mod
+        }
+    except:
+        return "Could not modify user"
+    
 
-@mainsite.post('/order_66')
+@mainsite.post('/func/order_66')
 def delete_db():
     db.drop_all()
-    
-        
-    
     
     #This is pending to fix and improve
     
