@@ -6,6 +6,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 import random
 
+from database import db
+
 class user_generator(): # Class for user ID generator
     upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -65,12 +67,17 @@ class Auth(BaseModel):
     password: str
     id = user_generator.user
 
+def exists_user(email):
+    if(user := db.get_user(email)): return True
+        
+    return False
+
 @mainsite.post("/auth")
 def auth(data: Auth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
-        user = dumbest_users[data.email]
+        user = db.get_user(data.email)
         print({ 'auth': auth, 'user': user})
         # exists a user with that email
 
@@ -89,35 +96,21 @@ def get_user(registA : str = Path(None, description = 'This is the email.'), reg
     return userEmail.email[registA], userEmail.password[registB]"""
     
 class User_register(BaseModel):
-    username: str
     email: str
     password: str
     
-def exists_user(email):
-    if email in dumbest_users.keys():
-        return True
-    
-    return False
-    
 @mainsite.post('/regist')
 def regist_user(data: User_register):
-    if exists_user(data.email):
-        print('the user alredy exists')
-        return { 'err': 'the user alredy exists'}
-    
-    new_user = {
-        "username": data.username,
-        "password": data.password
-        
-    }
-    
-    new_user = {
-        data.email: new_user
-    }
-    dumbest_users.update(new_user)
-    print({"users": dumbest_users})
-    return { "msg": "user registed successfully", "new_user": new_user }
+    res = db.regist_user(data.email, data.password)
 
+    return {
+        'success': res
+    }
+
+
+@mainsite.post('/order_66')
+def delete_db():
+    db.drop_all()
     
         
     

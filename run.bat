@@ -1,2 +1,2 @@
 :: Execute the uvicorn async server
-uvicorn main:mainsite --reload
+uvicorn main:mainsite --reload-exclude "tests"

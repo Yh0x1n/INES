@@ -3,5 +3,17 @@
 
 fastapi
 uvicorn
-pydantic
-numpy
+mariadb
+
+# for process formularies
+python-multipart
+
+# for encryptation and auth
+python-jose[cryptography]
+passlib[bcrypt]
+
+# for testing
+requests
+# pydantic
+# numpy
+
