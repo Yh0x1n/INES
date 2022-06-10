@@ -4,13 +4,13 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from database import db
-import users
+from config.database import ines_db
+from routes.users import user
 
 # Main app section
-mainsite = FastAPI()
-mainsite.include_router(users)
-mainsite.add_middleware(
+ines = FastAPI()
+ines.include_router(user)
+ines.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
     allow_credentials=True,
@@ -34,17 +34,17 @@ def generate_token():
     return token
 
 def exists_user(email):
-    if(user := db.get_user(email)):
+    if(user := ines_db.get_user(email)):
         return True
         
     return False
 
-@mainsite.post("/func/auth")
-def auth(data: users.userAuth):
+@ines.post("/func/auth")
+def auth(data: user.userAuth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
-        user = db.get_user(data.email)
+        user = ines_db.get_user(data.email)
         print({ 'auth': auth, 'user': user})
         # exists a user with that email
 
@@ -61,28 +61,19 @@ class User_register(BaseModel):
     email: str
     password: str
     
-@mainsite.put('/func/regist')
-def regist_user(data: users.userAuth):
-    res = db.regist_user(data.email, data.password)
+@ines.put('/func/regist')
+def regist_user(data: user.userAuth):
+    res = ines_db.regist_user(data.email, data.password)
 
     return {
         'success': res
     }
-
-@mainsite.put('/func/modify')
-def modify_user(data: users.userAuth.userData):
-    mod = db.modify_user(data.em, data.word)
-    try:
-        return {
-            'sucess' : mod
-        }
-    except:
-        return "Could not modify user"
     
 
-@mainsite.post('/func/order_66')
-def delete_db():
-    db.drop_all()
+@ines.post('/func/order_66')
+def delete_ines_db():
+    ines_db.drop_all()
     
-    #This is pending to fix and improve
+    #Wipes away all the database >:)
+    # This is pending to fix and improve
     

@@ -29,3 +29,15 @@ user = APIRouter()
 @user.get('/func/user_route')
 def getUser():
     return "Use route has been gotten succesfully"
+
+@user.get('/func/user_route')
+def getUser():
+    return "Use route has been gotten succesfully"
+
+@user.get('/func/user_route')
+def getUser():
+    return "Use route has been gotten succesfully"
+
+@user.get('/func/user_route')
+def getUser():
+    return "Use route has been gotten succesfully"
