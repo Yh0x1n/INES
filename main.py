@@ -5,11 +5,10 @@ from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from config.database import ines_db
-from routes.users import user
+from routes.users import user, userAuth
 
 # Main app section
 ines = FastAPI()
-ines.include_router(user)
 ines.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -40,7 +39,7 @@ def exists_user(email):
     return False
 
 @ines.post("/func/auth")
-def auth(data: user.userAuth):
+def auth(data: userAuth):
     """Verify user email and password, 
     if both are valid, return a random token"""
     try:
@@ -62,8 +61,8 @@ class User_register(BaseModel):
     password: str
     
 @ines.put('/func/regist')
-def regist_user(data: user.userAuth):
-    res = ines_db.regist_user(data.email, data.password)
+def regist_user(data: userAuth):
+    res = ines_db.insert_user(data.email, data.password)
 
     return {
         'success': res

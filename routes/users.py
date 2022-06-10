@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 import random
 
+user = APIRouter()
 class user_generator(): # Class for user ID generator
     upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     lower = 'abcdefghijklmnopqrstuvwxyz'
@@ -10,22 +11,22 @@ class user_generator(): # Class for user ID generator
     Symbols = '¿?¡!$%&#-_+\/<ñ>'
     all = upper + lower + numbers + Symbols
     len = 10
-    user = ''.join(random.sample(all, len))
+    genID = ''.join(random.sample(all, len))
 
 class userID(BaseModel, user_generator): # Class for username and ID parameters
     nick : str
-    id = user_generator.user
+    id = user_generator.genID
 
-class userAuth(BaseModel):
+class userAuth( BaseModel):
     email: str
     password: str
-    id = user_generator.user
+    id = user_generator.genID
 
     def userData(userAuth):
         em = userAuth.email
         word = userAuth.password
         
-user = APIRouter()
+
 @user.get('/func/user_route')
 def getUser():
     return "Use route has been gotten succesfully"
