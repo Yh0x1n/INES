@@ -13,9 +13,11 @@ class DB:
             host = "127.0.0.1",
             port = 3306,
             )
+        
+            print ("[!] Database successfully loaded!")
 
         except mariadb.Error as e:
-            print (f"Error connecting to MariaDB Platform: {e}")
+            print (f"[!] Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
         
         #Get cursor
@@ -71,5 +73,3 @@ class DB:
         self.cur.execute ("drop table if exists users_data;")
 
 ines_db = DB()
-if ines_db == True:
-    print ("[!] Database successfully loaded!")
