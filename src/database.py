@@ -1,5 +1,6 @@
 import mariadb
 import sys
+from users import userAuth
 
 print ("[!] Starting Database...")
 class DB:
@@ -25,7 +26,7 @@ class DB:
         self.cur.execute('use ines_db;')    
         
         #Creating DB tables in case they don't exist
-        self.cur.execute('CREATE TABLE if NOT EXISTS users ('
+        self.cur.execute('CREATE TABLE if NOT EXISTS users_data ('
                         'id bigint unsigned not null auto_increment primary key,'
                         'nom varchar (50) not null,'
                         'nom2 varchar (50) null,'
@@ -38,26 +39,27 @@ class DB:
                         'nickname varchar (75) not null'
                         ');')
 
-        self.cur.execute('create table if not exists emails('
+        self.cur.execute('create table if not exists users_role('
                         'nickname varchar (75) not null key,'
                         'email varchar (120) not null,'
-                        'password varchar (30) not null'
+                        'password varchar (30) not null,'
+                        'role varchar (20) not null'
                         ');')
         
-    def insert_user (self, email, password): #Function to insert an user in the database by email and password
+    def insert_user (self, email, password, nickname, role): #Function to insert an user in the database by email and password
         try:
-            self.cur.execute(f"insert into emails (email, password) values ('{email}', '{password}');") #We have to fix this
+            self.cur.execute(f'insert into users_role (email, password, nickname, role) values ("{email}", "{password}", "{nickname}", "{role}");')
             return True
         except mariadb.Error as e:
             print ("[Error] There was an error during this action.")
             print(e)
             return False
     
-    def get_user(self, nickname): #Function to get user by its nickname
-        print (f"[!] Finding user with the name {nickname}")
+    def get_user(self, r : userAuth): #Function to get user by its nickname and role
+        print (f"[!] Finding user with the name {r.nickname}")
         try:
-            res = self.cur.execute("select * from emails where nickname = ", nickname, ";")
-            print (f"[!] The user(s) is(are): {nickname}")
+            res = self.cur.execute("select * from users_role where nickname = ", r.nickname," and role = ", r.role,";")
+            print (f"[!] The user(s) is(are): {r.nickname}, {r.role}")
             return res.fetchall()[0]
 
         except mariadb.Error as e:
@@ -66,10 +68,8 @@ class DB:
             return False
     
     def drop_all (self):
-        self.cur.execute ("drop table if exists users;")
-
+        self.cur.execute ("drop table if exists users_data;")
 
 ines_db = DB()
-ines_db.insert_user(email = '', password = '')
 
 print ("[!] Database successfully loaded!")

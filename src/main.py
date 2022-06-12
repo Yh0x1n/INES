@@ -4,11 +4,12 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from config.database import ines_db
-from routes.users import user, userAuth
+from database import ines_db, mariadb
+from users import userAuth, token_generator
 
 # Main app section
 ines = FastAPI()
+
 ines.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -17,7 +18,7 @@ ines.add_middleware(
     allow_headers=["*"],
 )
 
-dumbest_users = {
+'''dumbest_users = {
     'admin@gmail.com': { 
         "username": 'admin',
         "password": '1234567890'
@@ -26,10 +27,10 @@ dumbest_users = {
         "username": 'douglas',
         "password": 'onfire1234'
     },
-}
+}'''
 
 def generate_token(): 
-    token = 'some_random_token_12345'
+    token = token_generator.genToken
     return token
 
 def exists_user(email):
@@ -62,13 +63,18 @@ class User_register(BaseModel):
     
 @ines.put('/func/regist')
 def regist_user(data: userAuth):
-    res = ines_db.insert_user(data.email, data.password)
-
-    return {
-        'success': res
-    }
+    res = ines_db.insert_user(data.email, data.password, data.nickname, data.role)
+    return res
+@ines.get('/func/show')
+def obtain_user(data: userAuth):
+    try:
+        print ('[!] Getting user...')
+        res = ines_db.get_user(data.nickname, data.role)
+        return res
     
-
+    except mariadb.Error as e:
+        print ('[!] There was an error during this action.\n')
+        return e
 @ines.post('/func/order_66')
 def delete_ines_db():
     ines_db.drop_all()
