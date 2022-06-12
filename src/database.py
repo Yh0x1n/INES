@@ -13,7 +13,8 @@ class DB:
             host = "127.0.0.1",
             port = 3306,
             )
-        
+            conn.autocommit = True
+            
             print ("[!] Database successfully loaded!")
 
         except mariadb.Error as e:
@@ -29,23 +30,23 @@ class DB:
         
         #Creating DB tables in case they don't exist
         self.cur.execute('CREATE TABLE if NOT EXISTS users_data ('
-                        'id bigint unsigned not null auto_increment primary key,'
-                        'nom varchar (50) not null,'
-                        'nom2 varchar (50) null,'
-                        'nom3 varchar (50) null,'
-                        'ap varchar (50) not null,'
-                        'ap2 varchar (50) null,'
-                        'ap3 varchar (50) null,'
-                        'CI varchar (15) not null,'
-                        'nac date not null,'
-                        'nickname varchar (75) not null'
+                        'id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'nom VARCHAR (50) NOT NULL,'
+                        'nom2 VARCHAR (50) NULL,'
+                        'nom3 VARCHAR (50) NULL,'
+                        'ap VARCHAR (50) NOT NULL,'
+                        'ap2 VARCHAR (50) NULL,'
+                        'ap3 VARCHAR (50) NULL,'
+                        'CI VARCHAR (15) NOT NULL,'
+                        'nac date NOT NULL,'
+                        'nickname VARCHAR (75) NOT NULL'
                         ');')
 
-        self.cur.execute('create table if not exists users_role('
-                        'nickname varchar (75) not null key,'
-                        'email varchar (120) not null,'
-                        'passw varchar (30) not null,'
-                        'role varchar (20) not null'
+        self.cur.execute('CREATE TABLE if NOT EXISTS users_role('
+                        'nickname VARCHAR (75) NOT NULL KEY,'
+                        'email VARCHAR (120) NOT NULL,'
+                        'passw VARCHAR (30) NOT NULL,'
+                        'role VARCHAR (20) NOT NULL'
                         ');')
         
     def insert_user (self, id, nickname, email, password,  role): #Function to insert an user in the database by email and password
