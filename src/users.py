@@ -18,16 +18,13 @@ class id_generator():
     gen_id = ''.join(random.sample(numbers, len))
 
 class userAuth(BaseModel):
-
-    def __init__(self):
-        self.id = id_generator.gen_id
-        self.name : str
-        self.name2 : str
-        self.name3 : str
-        self.lastname : str
-        self.lastname2 : str
-        self.lastname3 :str
-        self.email : str
-        self.password : str
-        self.cedula : int
-        
+    id = id_generator.gen_id
+    name : str
+    name2 : str
+    name3 : str
+    lastname : str
+    lastname2 : str
+    lastname3 :str
+    email : str
+    password : str
+    cedula : int

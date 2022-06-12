@@ -27,7 +27,7 @@ class DB:
         self.cur.execute('create database if not exists ines_db;')
         self.cur.execute('use ines_db;')    
         
-        #Creating DB tables in case they don't exist
+        #Creating DB tables by SQL commands, in case they don't exist
         self.cur.execute('CREATE TABLE if NOT EXISTS usuarios ('
                         'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
                         'correo VARCHAR(50) NOT NULL,'
@@ -113,16 +113,38 @@ class DB:
     def get_user(self, id, name, lastname): 
         print (f"[!] Finding user with the ID {id}")
         try:
-            res = self.cur.execute(f"select * from users_role where ID = {id}")
+            res = self.cur.execute(f"select * from usuarios where ID = {id}")
             res.fetchall()[0]
-            return {name : lastname}
+            return f"The user is: {name} {lastname}; ID: {id}"
 
         except mariadb.Error as e:
-            print ("[Error] There was an unknown error during this action.")
+            print ("[Error] There was an error during this action.")
             print (e)
             return False
     
+    #Function to delete user by its ID (Need to fix it)
+    def delete_user(self, data : userAuth):
+        print("[!] Deleting user...")
+        try:
+            self.cur.execute(f"select * from usuarios;")
+            self.cur.execute(f"delete from usuarios where ID = {data.id};")
+            return True 
+        
+        except mariadb.Error as e:
+            print ("[!] There was an error during this action.")
+            return e
+
+    #Function to insert a major given in college. Still on idea phase      
+    '''def insert_major(self):
+        return False'''
+
+    #Function to drop a table from the database
     def drop_all (self):
-        self.cur.execute ("drop table if exists users_data;")
+        try:
+            res = self.cur.execute ("drop table if exists usuarios;")
+            return res
+        except mariadb.Error as e:
+            print ("There was an error during this action...")
+            return e
 
 ines_db = DB()
