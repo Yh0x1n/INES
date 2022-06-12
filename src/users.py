@@ -1,9 +1,8 @@
 # Module for users
+from tarfile import LENGTH_LINK
 from fastapi import APIRouter
 from pydantic import BaseModel
 import random
-
-user = APIRouter()
 
 class token_generator():
     upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -15,37 +14,18 @@ class token_generator():
     genToken = ''.join(random.sample(all, len))
 
 class user_generator(): # Class for user ID generator
-    numbers = '0123456789'
-    letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    all = numbers + letters
+    numbers = '1234567890'
+    i = 0
     len = 8
-    genID = ''.join(random.sample(all, len))
+    genID = ''.join(random.sample(numbers, len))
 
-class userID(BaseModel, user_generator): # Class for username and ID parameters
+class userID(BaseModel): # Class for username and ID parameters
     nick : str
     id = user_generator.genID
 
 class userAuth(BaseModel):
-    email: str
-    password: str
     id = user_generator.genID
     nickname : str
+    email: str
+    password: str
     role : str
-        
-
-@user.get('/func/admin')
-def admin():
-    
-    return "Use route has been gotten succesfully"
-
-@user.get('/func/user_route')
-def getUser():
-    return "Use route has been gotten succesfully"
-
-@user.get('/func/user_route')
-def getUser():
-    return "Use route has been gotten succesfully"
-
-@user.get('/func/user_route')
-def getUser():
-    return "Use route has been gotten succesfully"

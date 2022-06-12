@@ -61,9 +61,9 @@ class User_register(BaseModel):
     email: str
     password: str
     
-@ines.put('/func/regist')
+@ines.post('/func/regist')
 def regist_user(data: userAuth):
-    res = ines_db.insert_user(data.email, data.password, data.nickname, data.role)
+    res = ines_db.insert_user(data.id, data.email, data.password, data.nickname, data.role)
     return res
 @ines.get('/func/show')
 def obtain_user(data: userAuth):
