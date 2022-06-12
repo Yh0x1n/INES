@@ -1,6 +1,6 @@
 import mariadb
 import sys
-from users import userAuth
+from src.users import userAuth
 
 print ("[!] Starting Database...")
 class DB:
@@ -58,12 +58,12 @@ class DB:
             print(e)
             return False
     
-    def get_user(self, nickname, role): #Function to get user by its nickname and role
-        print (f"[!] Finding user with the name {nickname}")
+    def get_user(self, id, nickname, role): #Function to get user by it's ID, and shows nickame and role
+        print (f"[!] Finding user with the ID {id}")
         try:
-            res = self.cur.execute("select * from users_role where nickname = ", nickname," and role = ", role,";")
-            print (f"[!] The user(s) is(are): {nickname}, {role}")
-            return res.fetchall()[0]
+            res = self.cur.execute(f"select * from users_role where ID = {id}")
+            res.fetchall()[0]
+            return {nickname : role}
 
         except mariadb.Error as e:
             print ("[Error] There was an unknown error during this action.")

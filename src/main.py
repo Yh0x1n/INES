@@ -4,8 +4,8 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from database import ines_db, mariadb
-from users import userAuth, token_generator
+from src.database import ines_db, mariadb
+from src.users import *
 
 # Main app section
 ines = FastAPI()
@@ -61,20 +61,30 @@ class User_register(BaseModel):
     email: str
     password: str
     
-@ines.post('/func/regist')
+@ines.put('/func/regist')
 def regist_user(data: userAuth):
-    res = ines_db.insert_user(data.id, data.email, data.password, data.nickname, data.role)
+    res = ines_db.insert_user(data.id, data.nickname, data.email, data.password, data.role)
     return res
-@ines.get('/func/show')
-def obtain_user(data: userAuth):
+
+@ines.get('/func/show_user/{id}') #We need to fix this
+def obtain_user():
     try:
         print ('[!] Getting user...')
-        res = ines_db.get_user(data.nickname, data.role)
+        res = ines_db.get_user(id)
         return res
     
     except mariadb.Error as e:
         print ('[!] There was an error during this action.\n')
         return e
+
+@ines.post('func/modify_user') #Function to modify user
+def mod_user():
+    return
+
+@ines.delete('func/delete_user') #Function to delete user from the database
+def del_user():
+    return
+
 @ines.post('/func/order_66')
 def delete_ines_db():
     ines_db.drop_all()

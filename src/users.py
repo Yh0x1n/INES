@@ -26,6 +26,6 @@ class userID(BaseModel): # Class for username and ID parameters
 class userAuth(BaseModel):
     id = user_generator.genID
     nickname : str
-    email: str
-    password: str
+    email : str
+    password : str
     role : str
