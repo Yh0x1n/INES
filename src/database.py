@@ -110,12 +110,15 @@ class DB:
             return False
 
     #Function to get user by it's ID, and shows name and last name
-    def get_user(self, id, name, lastname): 
+    def get_user(self, id): 
         print (f"[!] Finding user with the ID {id}")
         try:
-            res = self.cur.execute(f"select * from usuarios where ID = {id}")
-            res.fetchall()[0]
-            return f"The user is: {name} {lastname}; ID: {id}"
+            self.cur.execute(f"select * from usuarios where ID = {id}")
+            user = self.cur.fetchall()[0]
+            users_dict = {'name' : user[2], 'lastname' : user[5], 'id' : id}
+
+            print (users_dict)
+            return f"The user is: {user[2]} {user[5]}; ID: {id}"
 
         except mariadb.Error as e:
             print ("[Error] There was an error during this action.")
@@ -127,6 +130,7 @@ class DB:
         print("[!] Deleting user...")
         try:
             self.cur.execute(f"select * from usuarios;")
+            print(f'data: {data}')
             self.cur.execute(f"delete from usuarios where ID = {data.id};")
             return True 
         
