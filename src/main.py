@@ -4,8 +4,8 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from src.database import ines_db, mariadb
-from src.users import *
+from database import ines_db, mariadb
+from users import *
 
 # Main app section
 ines = FastAPI()
@@ -63,7 +63,7 @@ class User_register(BaseModel):
     
 @ines.put('/func/regist')
 def regist_user(data: userAuth):
-    res = ines_db.insert_user(data.id, data.nickname, data.email, data.password, data.role)
+    res = ines_db.insert_user(data.id, data.name, data.name2, data.lastname, data.lastname2, data.email, data.password, data.cedula)
     return res
 
 @ines.get('/func/show_user/{id}') #We need to fix this

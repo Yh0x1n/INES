@@ -1,7 +1,7 @@
+from ast import NamedExpr
 import mariadb
 import sys
-from src.users import userAuth
-
+from users import *
 print ("[!] Starting Database...")
 class DB:
     def __init__(self):
@@ -29,41 +29,94 @@ class DB:
         self.cur.execute('use ines_db;')    
         
         #Creating DB tables in case they don't exist
-        self.cur.execute('CREATE TABLE if NOT EXISTS users_data ('
-                        'id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
-                        'nom VARCHAR (50) NOT NULL,'
-                        'nom2 VARCHAR (50) NULL,'
-                        'nom3 VARCHAR (50) NULL,'
-                        'ap VARCHAR (50) NOT NULL,'
-                        'ap2 VARCHAR (50) NULL,'
-                        'ap3 VARCHAR (50) NULL,'
-                        'CI VARCHAR (15) NOT NULL,'
-                        'nac date NOT NULL,'
-                        'nickname VARCHAR (75) NOT NULL'
+        self.cur.execute('CREATE TABLE if NOT EXISTS usuarios ('
+                        'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'correo VARCHAR(50) NOT NULL,'
+                        'nombre VARCHAR (50) NOT NULL,'
+                        'nombre2 VARCHAR (50) NULL,'
+                        'nombre3 VARCHAR (50) NULL,'
+                        'apellido VARCHAR (50) NOT NULL,'
+                        'apellido2 VARCHAR (50) NULL,'
+                        'apellido3 VARCHAR (50) NULL,'
+                        'cedula VARCHAR (15) NOT NULL,'
+                        'nacimiento DATE NOT NULL NULL,'
+                        'es_admin BINARY (1) NOT NULL'
                         ');')
 
-        self.cur.execute('CREATE TABLE if NOT EXISTS users_role('
-                        'nickname VARCHAR (75) NOT NULL KEY,'
-                        'email VARCHAR (120) NOT NULL,'
-                        'passw VARCHAR (30) NOT NULL,'
-                        'role VARCHAR (20) NOT NULL'
+        self.cur.execute('CREATE TABLE if NOT EXISTS instrumentos ('
+                        'ID INT (10) UNSIGNED NOT NULL PRIMARY KEY,'
+                        'preguntas JSON NULL'
                         ');')
         
-    def insert_user (self, id, nickname, email, password,  role): #Function to insert an user in the database by email and password
+        self.cur.execute('CREATE TABLE if NOT EXISTS carreras('
+                        'codigo VARCHAR (10) NOT NULL PRIMARY KEY,'
+                        'nombre VARCHAR (30) NOT NULL'
+                        ');')
+
+        self.cur.execute('CREATE TABLE if NOT EXISTS tipos_de_contrato('
+                        'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'tipo VARCHAR (20) NOT NULL'
+                        ');')
+        
+        self.cur.execute('CREATE TABLE if NOT EXISTS evaluadores ('
+                        'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'es_coordinador BINARY (1) NOT NULL,'
+                        'carreras_codigo VARCHAR (10) NOT NULL,'
+                        'usuarios_ID INT (10) UNSIGNED NOT NULL'
+                        ');')
+        
+        self.cur.execute('CREATE TABLE if NOT EXISTS profesores ('
+                        'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'usuarios_ID INT (10) UNSIGNED NOT NULL,'
+                        'tipos_de_contrato_ID INT (10) UNSIGNED NOT NULL'
+                        ');')
+
+        self.cur.execute('CREATE TABLE if NOT EXISTS evaluaciones('
+                        'ID INT (10) UNSIGNED NOT NULL PRIMARY KEY,'
+                        'resultados JSON NULL,'
+                        'fecha DATE NULL,'
+                        'tipo INT (10) UNSIGNED NOT NULL,'
+                        'instrumentos_ID INT (10) UNSIGNED NOT NULL,'
+                        'profesores_ID INT (10) UNSIGNED NOT NULL,'
+                        'evaluadores_ID INT (10) UNSIGNED NOT NULL'
+                        ');')
+
+        self.cur.execute('CREATE TABLE if NOT EXISTS materias('
+                        'codigo VARCHAR (20) NOT NULL PRIMARY KEY,'
+                        'nombre VARCHAR (45) NOT NULL,'
+                        'profesores_ID INT (10) UNSIGNED NOT NULL,'
+                        'carreras_codigo VARCHAR (10) NOT NULL'
+                        ');')
+
+        self.cur.execute('CREATE TABLE if NOT EXISTS horarios('
+                        'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
+                        'modulo CHAR (50) NULL,'
+                        'dia VARCHAR (20) NULL,'
+                        'hora_inicio TIME NOT NULL,'
+                        'hora_final TIME NOT NULL,'
+                        'materias_codigo VARCHAR (45)'
+                        ');')
+
+    #Function to insert an user in the database by email and password
+    def insert_user (self, id, name, name2, lastname, lastname2, email, password, cedula):
         try:
-            self.cur.execute(f'insert into users_role (id, nickname, email, passw, role) values ("{id}", "{nickname}", "{email}", "{password}", "{role}");')
+            self.cur.execute(f'insert into usuarios (id, nombre, nombre2, apellido,'
+                            f'apellido2, correo, contraseña, cedula) values'
+                            f'("{id}", "{name}", "{name2}", "{lastname}", "{lastname2}", '
+                            f'"{email}", "{password}", "{cedula}");')
             return True
         except mariadb.Error as e:
             print ("[Error] There was an error during this action.")
             print(e)
             return False
-    
-    def get_user(self, id, nickname, role): #Function to get user by it's ID, and shows nickame and role
+
+    #Function to get user by it's ID, and shows name and last name
+    def get_user(self, id, name, lastname): 
         print (f"[!] Finding user with the ID {id}")
         try:
             res = self.cur.execute(f"select * from users_role where ID = {id}")
             res.fetchall()[0]
-            return {nickname : role}
+            return {name : lastname}
 
         except mariadb.Error as e:
             print ("[Error] There was an unknown error during this action.")
