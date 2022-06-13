@@ -1,4 +1,3 @@
-from ast import NamedExpr
 import mariadb
 import sys
 from users import *
