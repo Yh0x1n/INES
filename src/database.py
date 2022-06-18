@@ -1,10 +1,15 @@
+# Module for database using MariaDB
+
 import mariadb
 import sys
 from users import *
 print ("[!] Starting Database...")
 class DB:
+
+    '''CONNECTION TO THE DATABASE SECTION'''
+
     def __init__(self):
-        #Connecting to DB
+        #Connecting to the database
         try:
             conn = mariadb.connect(
             user = "root",
@@ -96,6 +101,9 @@ class DB:
                         'materias_codigo VARCHAR (45)'
                         ');')
 
+
+    '''USERS SECTION'''
+
     #Function to insert an user in the database by email and password
     def insert_user (self, id, name, name2, lastname, lastname2, email, password, cedula):
         try:
@@ -103,7 +111,7 @@ class DB:
                             f'apellido2, correo, contraseña, cedula) values'
                             f'("{id}", "{name}", "{name2}", "{lastname}", "{lastname2}", '
                             f'"{email}", "{password}", "{cedula}");')
-            return True
+            return f'The registed user is: {name}, {lastname}; ID: {id}'
         except mariadb.Error as e:
             print ("[Error] There was an error during this action.")
             print(e)
@@ -125,19 +133,62 @@ class DB:
             print (e)
             return False
     
-    #Function to delete user by its ID (Need to fix it)
-    def delete_user(self, data : userAuth):
+    #Function to delete user by its ID
+    def delete_user(self, id):
         print("[!] Deleting user...")
         try:
-            self.cur.execute(f"select * from usuarios;")
-            print(f'data: {data}')
-            self.cur.execute(f"delete from usuarios where ID = {data.id};")
+            self.cur.execute("select * from usuarios;")
+            print(f'data: {id}')
+            self.cur.execute(f"delete from usuarios where ID = {id};")
             return True 
         
         except mariadb.Error as e:
             print ("[!] There was an error during this action.")
             return e
 
+    #Function to modify user based on different conditions (still on test phase)
+    def mod_user(self, name, name2, lastname, lastname2, email, cedula, id):
+        print ("[!] Modifying user...")
+        try:
+            self.cur.execute('select * from usuarios;')
+            if name:
+                self.cur.execute(f'update usuarios set nombre = "{name}" where ID = {id};')
+            
+            elif name2:
+                self.cur.execute(f'update usuarios set nombre2 = "{name2}" where ID = {id};')
+            
+            elif lastname:
+                self.cur.execute(f'update usuarios set apellido = "{lastname}" where ID = {id};')
+            
+            elif lastname2:
+                self.cur.execute(f'update usuarios set apellido2 = "{lastname2}" where ID = {id};')
+            
+            elif email:
+                self.cur.execute(f'update usuarios set correo = "{email}" where ID = {id};')
+
+            elif cedula:
+                self.cur.execute(f'update usuarios set cedula = {cedula} where ID = {id};')
+            
+            #I want to do an elif where you can read two values at the same time as True
+
+            return True     
+
+        except mariadb.Error as e:
+            return e
+
+    '''FORMS SECTION'''
+
+    def create_form():
+
+        return
+
+    def get_form():
+
+        return
+
+    def del_form():
+
+        return
     #Function to insert a major given in college. Still on idea phase      
     '''def insert_major(self):
         return False'''

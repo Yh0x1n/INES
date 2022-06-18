@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from database import ines_db, mariadb
 from users import *
 
-# Main app section
+'''MAIN APP SECTION'''
 ines = FastAPI()
 
 ines.add_middleware(
@@ -17,6 +17,8 @@ ines.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+'''USERS SECTION'''
 
 def generate_token(x : token_generator): 
     token = x.gen_token
@@ -39,18 +41,18 @@ def auth(data: userAuth):
         return { 'err': 'password' }
     except KeyError:
         return { 'err': 'email' }    
-
-class User_register(BaseModel):
-    email: str
-    password: str
     
 @ines.put('/regist')
 def regist_user(data: userAuth):
-    res = ines_db.insert_user(data.id, data.name, data.name2, data.lastname, data.lastname2, data.email, data.password, data.cedula)
+    '''Registers the user in the system and saves
+        them into the database'''
+    res = ines_db.insert_user(data.id, data.name, data.name2, data.lastname,
+                        data.lastname2, data.email, data.password, data.cedula)
     return res
 
-@ines.get('/user') #We need to fix this
+@ines.get('/user') #Function to get user from the database
 def get_user(id : str):
+    '''Obtains the user from the database'''
     print(f'[!] user id: {id}')
     try:
         print ('[!] Getting user...')
@@ -62,21 +64,47 @@ def get_user(id : str):
         return e
 
 @ines.post('/modify_user') #Function to modify user
-def mod_user():
-    return
+def mod_user(id : int, name : str = None, name2 : str = None, lastname : str = None, lastname2 : str = None,
+            email : str = None, cedula : int = None):
+    '''Modifies the user in the database'''
+    try:
+        res = ines_db.mod_user(name, name2, lastname, lastname2, email, cedula, id)
+        return res
+
+    except mariadb.Error as e:
+        print ('[!] There was an error during this action.\n')
+        return e
 
 @ines.delete('/delete_user') #Function to delete user from the database
-def del_user(data : userAuth):
+def del_user(id : int):
+    '''Deletes user from the database by its ID.'''
     try:
-        res = ines_db.delete_user(data)
+        res = ines_db.delete_user(id)
         return res
     except mariadb.Error as e:
         return e
 
+'''FORMULARIES SECTION'''
+
+@ines.get('/forms')
+def get_form():
+    return
+
+@ines.post('/forms')
+def post_form():
+    return
+
+@ines.delete('/forms-delete')
+def del_form():
+    return
+
+'''DATABASE SECTION'''
+
 @ines.post('/order_66')
 def delete_ines_db():
+    '''BE CAREFUL, this wipes away important parts of the database...
+    like EVERYTHING ON IT.'''
     ines_db.drop_all()
     
     #Wipes away all the database >:)
     # This is pending to fix and improve
-    
