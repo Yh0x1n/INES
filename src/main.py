@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from database import ines_db, mariadb
 from users import *
+from forms import f
 
 '''MAIN APP SECTION'''
 ines = FastAPI()
@@ -87,8 +88,11 @@ def del_user(id : int):
 '''FORMULARIES SECTION'''
 
 @ines.get('/forms')
-def get_form():
-    return
+def get_form(id : int):
+
+    res = f.get_formulary(id)
+
+    return res
 
 @ines.post('/forms')
 def post_form():

@@ -21,10 +21,38 @@ class userAuth(BaseModel):
     id = id_generator.gen_id
     name : str
     name2 : str
-    name3 : str
     lastname : str
     lastname2 : str
-    lastname3 :str
     email : str
     password : str
     cedula : int
+    is_admin : bool
+
+class contracts(BaseModel):
+    id = id_generator.gen_id
+    contract_type : str
+
+class teachers(BaseModel):
+    id = id_generator.gen_id
+    userID = userAuth.id
+    contract = contracts.contract_type
+
+class majors(BaseModel):
+    code : str
+    name : str
+
+class subjects(BaseModel):
+    code : str
+    name : str
+    teacher_ID = teachers.id
+    major_code = majors.code
+
+class evaluators(BaseModel):
+    id = id_generator.gen_id
+    userID = userAuth.id
+    is_coordinator : bool
+    major_code = majors.code
+
+class instruments(BaseModel):
+    id : int
+    questions : str

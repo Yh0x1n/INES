@@ -3,6 +3,8 @@
 import mariadb
 import sys
 from users import *
+from forms import Forms
+
 print ("[!] Starting Database...")
 class DB:
 
@@ -27,6 +29,7 @@ class DB:
         
         #Get cursor
         self.cur = conn.cursor()
+        self.forms = Forms(self.cur)
 
         #Ensure the DB
         self.cur.execute('create database if not exists ines_db;')
@@ -182,11 +185,17 @@ class DB:
 
         return
 
-    def get_form():
+    def get_form(self, id):
+        try:
+            self.forms.execute(f'select * from instrumentos where ID = {id};')
+        
+            return True
 
-        return
+        except mariadb.Error as e:
+            print('[!] There was an error during this action.')
+            return e
 
-    def del_form():
+    def del_form(self, id):
 
         return
     #Function to insert a major given in college. Still on idea phase      
