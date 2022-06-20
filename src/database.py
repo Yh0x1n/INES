@@ -30,6 +30,7 @@ class DB:
         #Get cursor
         self.cur = conn.cursor()
         self.forms = Forms(self.cur)
+        
 
         #Ensure the DB
         self.cur.execute('create database if not exists ines_db;')

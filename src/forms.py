@@ -6,7 +6,4 @@ class Forms:
         self.cur = cursor
     
     def get_formulary(id):
-        print(instruments.json(models_as_dict = False))
-
-
-f = Forms()
+        print(Instruments.json(models_as_dict = False))

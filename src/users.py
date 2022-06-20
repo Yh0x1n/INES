@@ -28,31 +28,31 @@ class userAuth(BaseModel):
     cedula : int
     is_admin : bool
 
-class contracts(BaseModel):
+class Contracts(BaseModel):
     id = id_generator.gen_id
     contract_type : str
 
-class teachers(BaseModel):
+class Teachers(BaseModel):
     id = id_generator.gen_id
-    userID = userAuth.id
-    contract = contracts.contract_type
+    userID : str
+    contract : str
 
-class majors(BaseModel):
+class Majors(BaseModel):
     code : str
     name : str
 
-class subjects(BaseModel):
+class Subjects(BaseModel):
     code : str
     name : str
-    teacher_ID = teachers.id
-    major_code = majors.code
+    teacher_ID = int
+    major_code = str
 
-class evaluators(BaseModel):
+class Evaluators(BaseModel):
     id = id_generator.gen_id
-    userID = userAuth.id
+    userID : str
     is_coordinator : bool
-    major_code = majors.code
+    major_code = str
 
-class instruments(BaseModel):
+class Instruments(BaseModel):
     id : int
     questions : str
