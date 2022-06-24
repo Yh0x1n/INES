@@ -1,12 +1,14 @@
 #INES
 #by Yhoxin Rossell, Hernán Guerrero and Douglas Socorro
+import mariadb
 
-from pydantic import BaseModel
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from database import ines_db, mariadb
+from database import ines_db
 from users import *
-from forms import f
+from forms import Forms
+
+from routers import forms
 
 '''MAIN APP SECTION'''
 ines = FastAPI()
@@ -19,11 +21,17 @@ ines.add_middleware(
     allow_headers=["*"],
 )
 
+ines.include_router(forms.router)
+
 '''USERS SECTION'''
 
 def generate_token(x : token_generator): 
     token = x.gen_token
     return token
+
+@ines.get('/say')
+def say():
+    return { 'msg': 'Hello world!'}
 
 @ines.post("/auth")
 def auth(data: userAuth):
@@ -51,8 +59,8 @@ def regist_user(data: userAuth):
                         data.lastname2, data.email, data.password, data.cedula)
     return res
 
-@ines.get('/user') #Function to get user from the database
-def get_user(id : str):
+@ines.get('/user')
+def get_user(id: str):
     '''Obtains the user from the database'''
     print(f'[!] user id: {id}')
     try:
@@ -84,23 +92,6 @@ def del_user(id : int):
         return res
     except mariadb.Error as e:
         return e
-
-'''FORMULARIES SECTION'''
-
-@ines.get('/forms')
-def get_form(id : int):
-
-    res = f.get_formulary(id)
-
-    return res
-
-@ines.post('/forms')
-def post_form():
-    return
-
-@ines.delete('/forms-delete')
-def del_form():
-    return
 
 '''DATABASE SECTION'''
 

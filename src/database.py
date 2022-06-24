@@ -5,6 +5,8 @@ import sys
 from users import *
 from forms import Forms
 
+import config
+
 print ("[!] Starting Database...")
 class DB:
 
@@ -14,8 +16,8 @@ class DB:
         #Connecting to the database
         try:
             conn = mariadb.connect(
-            user = "root",
-            password = "28289663",
+            user = config.DB_USER,
+            password = config.DB_PASSWORD,
             host = "127.0.0.1",
             port = 3306,
             )
@@ -30,6 +32,7 @@ class DB:
         #Get cursor
         self.cur = conn.cursor()
         self.forms = Forms(self.cur)
+        
 
         #Ensure the DB
         self.cur.execute('create database if not exists ines_db;')
@@ -51,7 +54,8 @@ class DB:
                         ');')
 
         self.cur.execute('CREATE TABLE if NOT EXISTS instrumentos ('
-                        'ID INT (10) UNSIGNED NOT NULL PRIMARY KEY,'
+                        'ID INT(10) UNSIGNED NOT NULL PRIMARY KEY,'
+                        'nombre VARCHAR(30) NOT NULL,'
                         'preguntas JSON NULL'
                         ');')
         
@@ -119,6 +123,8 @@ class DB:
             print ("[Error] There was an error during this action.")
             print(e)
             return False
+
+        return True
 
     #Function to get user by it's ID, and shows name and last name
     def get_user(self, id): 
