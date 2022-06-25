@@ -35,6 +35,18 @@ def regist_user(new_user: New_user):
 
     return {'success': True, 'new_user': new_user}
 
+
+@router.post('/users') #Function to modify user
+def mod_user(id : int, name : str = None, name2 : str = None, lastname : str = None, lastname2 : str = None,
+            email : str = None, cedula : int = None):
+    '''Modifies the user in the database'''
+    try:
+        res = ines_db.mod_user(name, name2, lastname, lastname2, email, cedula, id)
+        return res
+
+    except mariadb.Error as e:
+        print ('[!] There was an error during this action.\n')
+        return e
 @router.get('/users')
 def get_user(id: str):
     '''Obtains the user from the database'''

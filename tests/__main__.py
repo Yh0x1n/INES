@@ -7,38 +7,51 @@ PORT = 8000
 HOST = f"http://localhost:{PORT}"
 
 class Test(unittest.TestCase):
-  '''
-  @unittest.skip('kaslñfjalskjf')
-  def sssstest_user_regist(self):
+  
+  #unittest.skip('')
+  def test_user_routes(self):
+    # REGIST...
+    print('[!] Registing user...')
     user = {
+      "name": "guarapita",
+      "lastname": "acida",
       "email": "guarapita_dulce@gmail.com",
-      "password": "caroreña"
+      "password": "caroreña",
+      "cedula": 12345
     }
     
-    res = requests.post(f"{HOST}/regist", data=json.dumps(user))
-    print(f'res={res.json()}')
+    res = requests.post(f"{HOST}/users", data=json.dumps(user))
     result = res.json()
 
     self.assertEqual(result["success"], True)
     self.assertEqual(result["new_user"]['email'], user['email'])
+    user['id'] = result["new_user"]['id']
 
-  @unittest.skip('kaslñfjalskjf')
-  def test_auth(self):
-    user = {
-      "email": "guarapita_dulce@gmail.com",
-      "password": "caroreña"
+    # now, AUTH...
+
+    print('[!] Authenticating user...')
+    auth_user = {
+      "email": user['email'],
+      "password": user['password']
     }
 
-    res = requests.post(f"{HOST}/auth", data=json.dumps(user))
-    print(f'res_raw={res}')
-    print(f'res={res.json()}')
+    res = requests.post(f"{HOST}/auth", data=json.dumps(auth_user))
 
     result = res.json()
-    self.assertEqual(result['success'], True)
+    self.assertTrue(result['success'])
+    self.assertEqual(result['user']['id'], user['id'])
     self.assertEqual((len(result['token']) > 7), True)
-  '''
 
-  def test_forms(self):
+    # now, DELETE..., if is 0 not run
+    if 1:
+      print('[t] deleting user...')
+      res = requests.delete(f"{HOST}/users/{user['id']}")
+      result = res.json()
+      self.assertTrue(result['success'])  
+
+  #@unittest.skip('for now')
+  def test_forms_routes(self):
+    print('[!] Creating form...')
     form = {
       "name": "Formulario de Douglas",
       "items": '{"msg": "hola mundo"}',
@@ -52,6 +65,7 @@ class Test(unittest.TestCase):
     form['id'] = result['form']['id']
 
     # now, to find the form with resived id
+    print('[!] Retriving form...')
 
     res = requests.get(f"{HOST}/forms/{form['id']}")
     result = res.json()
@@ -59,7 +73,8 @@ class Test(unittest.TestCase):
     self.assertEqual(result['form']['name'], form['name'])
     
     # now, to delete the form
-    
+    print('[!] Deleting form...')
+
     res = requests.delete(f"{HOST}/forms/{form['id']}")
     result = res.json()
     self.assertTrue(result['success'])
