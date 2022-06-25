@@ -9,7 +9,7 @@ class Forms:
         # WARING: update to prevent SQL injection atacks
         self.cur.execute(f'SELECT * FROM instrumentos WHERE ID = {id};')
         tuple_form = self.cur.fetchall()[0]
-        #print(f'[!] the tuple_form is: {tuple_form}')
+        print(f'[!] the tuple_form is: {tuple_form}')
 
         form = {
             'id': tuple_form[0],

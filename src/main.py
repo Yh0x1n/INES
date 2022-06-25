@@ -1,16 +1,11 @@
 #INES
 #by Yhoxin Rossell, Hernán Guerrero and Douglas Socorro
 import mariadb
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-
 import util
 from database import ines_db
-
-# ROUTERS 
-from routers import auth, users, forms
-
+from routers import auth, users, forms #ROUTERS
 
 '''MAIN APP SECTION'''
 ines = FastAPI()
@@ -32,11 +27,7 @@ ines.include_router(forms.router)
 @ines.get('/say')
 def say():
     return { 'msg': 'Hello world!'}
-
-# USERS
-
     
-
 '''DATABASE SECTION'''
 
 @ines.post('/order_66')

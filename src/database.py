@@ -2,8 +2,6 @@
 
 import mariadb
 import sys
-
-
 from users import Users
 from forms import Forms
 import config
@@ -51,9 +49,9 @@ class DB:
                         'apellido VARCHAR (50) NOT NULL,'
                         'apellido2 VARCHAR (50) NULL,'
                         'apellido3 VARCHAR (50) NULL,'
-                        'cedula VARCHAR (15) NOT NULL'
+                        'cedula VARCHAR (15) NOT NULL,'
                         #'nacimiento DATE NOT NULL NULL,'
-                        #'es_admin BINARY (1) NOT NULL'
+                        'es_admin BINARY (1) NOT NULL'
                         ');')
 
         self.cur.execute('CREATE TABLE if NOT EXISTS instrumentos ('

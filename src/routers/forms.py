@@ -2,7 +2,6 @@ from fastapi import APIRouter
 from typing import Optional
 from pydantic import BaseModel
 import random
-
 from database import ines_db
 import util
 
