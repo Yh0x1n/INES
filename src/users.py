@@ -1,5 +1,4 @@
 # Module for users
-from tarfile import LENGTH_LINK
 from fastapi import APIRouter
 from pydantic import BaseModel
 import random
@@ -13,19 +12,47 @@ class token_generator():
     len = 10
     genToken = ''.join(random.sample(all, len))
 
-class user_generator(): # Class for user ID generator
+class id_generator():
     numbers = '1234567890'
-    i = 0
-    len = 8
-    genID = ''.join(random.sample(numbers, len))
-
-class userID(BaseModel): # Class for username and ID parameters
-    nick : str
-    id = user_generator.genID
+    len = 4
+    gen_id = ''.join(random.sample(numbers, len))
 
 class userAuth(BaseModel):
-    id = user_generator.genID
-    nickname : str
-    email: str
-    password: str
-    role : str
+    id = id_generator.gen_id
+    name : str
+    name2 : str
+    lastname : str
+    lastname2 : str
+    email : str
+    password : str
+    cedula : int
+    is_admin : bool
+
+class contracts(BaseModel):
+    id = id_generator.gen_id
+    contract_type : str
+
+class teachers(BaseModel):
+    id = id_generator.gen_id
+    userID = userAuth.id
+    contract = contracts.contract_type
+
+class majors(BaseModel):
+    code : str
+    name : str
+
+class subjects(BaseModel):
+    code : str
+    name : str
+    teacher_ID = teachers.id
+    major_code = majors.code
+
+class evaluators(BaseModel):
+    id = id_generator.gen_id
+    userID = userAuth.id
+    is_coordinator : bool
+    major_code = majors.code
+
+class instruments(BaseModel):
+    id : int
+    questions : str
