@@ -7,12 +7,15 @@ PORT = 8000
 HOST = f"http://localhost:{PORT}"
 
 class Test(unittest.TestCase):
-  '''
-  @unittest.skip('kaslñfjalskjf')
-  def sssstest_user_regist(self):
+  
+  #@unittest.skip('kaslñfjalskjf')
+  def test_user_regist(self):
     user = {
+      "name": "guarapita",
+      "lastname": "acida",
       "email": "guarapita_dulce@gmail.com",
-      "password": "caroreña"
+      "password": "caroreña",
+      "cedula": 12345
     }
     
     res = requests.post(f"{HOST}/regist", data=json.dumps(user))
@@ -21,7 +24,14 @@ class Test(unittest.TestCase):
 
     self.assertEqual(result["success"], True)
     self.assertEqual(result["new_user"]['email'], user['email'])
+    user['id'] = result["new_user"]['id']
 
+    # now, to delete the user
+    res = requests.delete(f"{HOST}/users/{user['id']}")
+    result = res.json()
+    self.assertTrue(result['success'])
+
+  """
   @unittest.skip('kaslñfjalskjf')
   def test_auth(self):
     user = {
@@ -36,8 +46,9 @@ class Test(unittest.TestCase):
     result = res.json()
     self.assertEqual(result['success'], True)
     self.assertEqual((len(result['token']) > 7), True)
-  '''
+  """
 
+  @unittest.skip('for now')
   def test_forms(self):
     form = {
       "name": "Formulario de Douglas",

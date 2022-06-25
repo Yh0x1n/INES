@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 from typing import Optional
 from pydantic import BaseModel
+import random
 
 from database import ines_db
-
-import random
+import util
 
 router = APIRouter()
 
@@ -15,12 +15,6 @@ def get_form(id: int):
 
     return {'form': form}
 
-
-def random_id():
-    numbers = '1234567890'
-    len = 4
-    return int(''.join(random.sample(numbers, len)))
-
 class InsertForm(BaseModel):
     id: Optional[int]
     name: str
@@ -30,8 +24,7 @@ class InsertForm(BaseModel):
 @router.post('/forms')
 def post_form(form: InsertForm):
 
-    if not form.id: 
-        form.id = random_id()
+    form.id = util.random_id()
 
     if not ines_db.forms.insert(form):
         return {'success': False}
