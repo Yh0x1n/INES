@@ -40,13 +40,28 @@ class Test(unittest.TestCase):
 
   def test_forms(self):
     form = {
-      "id": 1,
       "name": "Formulario de Douglas",
-      "id_creator": "1",
-      "content": '{"msg": "hola mundo"}'
+      "items": '{"msg": "hola mundo"}',
+      "id_creator": "1"
+      
     }
+    
     res = requests.post(f"{HOST}/forms", data=json.dumps(form))
-    results = res.json()    
-    self.assertEqual(results['success'], True)
+    result = res.json()
+    self.assertTrue(result['success'], True)
+    form['id'] = result['form']['id']
 
+    # now, to find the form with resived id
+
+    res = requests.get(f"{HOST}/forms/{form['id']}")
+    result = res.json()
+    self.assertEqual(result['form']['id'], form['id'])
+    self.assertEqual(result['form']['name'], form['name'])
+    
+    # now, to delete the form
+    
+    res = requests.delete(f"{HOST}/forms/{form['id']}")
+    result = res.json()
+    self.assertTrue(result['success'])
+    
 unittest.main()
