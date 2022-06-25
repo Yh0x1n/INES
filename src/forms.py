@@ -1,6 +1,4 @@
-#Module for formularies
 import mariadb
-from users import *
 
 class Forms:
     def __init__(self, cursor):
@@ -8,7 +6,7 @@ class Forms:
     
     def get(self, id):
         print(f'[!database] finding form with id: {id}')
-        # TO-DO: update to prevent SQL injection atacks
+        # WARING: update to prevent SQL injection atacks
         self.cur.execute(f'SELECT * FROM instrumentos WHERE ID = {id};')
         tuple_form = self.cur.fetchall()[0]
         #print(f'[!] the tuple_form is: {tuple_form}')
@@ -37,7 +35,7 @@ class Forms:
     def delete(self, id):
         print(f'[!database] Deleting a form with id: {id}')
         try:
-            # TO-DO: update to prevent SQL injection atacks
+            # WARING: update to prevent SQL injection atacks
             res = self.cur.execute(f'DELETE FROM instrumentos WHERE ID={id};')
 
 
