@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from database import ines_db, mariadb
 from users import *
-from forms import f
+from forms import Forms
 
 '''MAIN APP SECTION'''
 ines = FastAPI()
@@ -24,6 +24,10 @@ ines.add_middleware(
 def generate_token(x : token_generator): 
     token = x.gen_token
     return token
+
+@ines.get('/say')
+def say():
+    return { 'msg': 'Hello world!'}
 
 @ines.post("/auth")
 def auth(data: userAuth):
@@ -90,7 +94,7 @@ def del_user(id : int):
 @ines.get('/forms')
 def get_form(id : int):
 
-    res = f.get_formulary(id)
+    res = Forms.get_formulary(id)
 
     return res
 
