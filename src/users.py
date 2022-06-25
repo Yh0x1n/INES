@@ -113,7 +113,9 @@ class Users():
             return {}
 
     #Function to modify user based on different conditions (still on test phase)
-    def mod_user(self, name, name2, lastname, lastname2, email, cedula, id):
+    def mod_user(self, id, name, name2, name3,
+                lastname, lastname2, lastname3,
+                email, cedula, password):
         print ("[!] Modifying user...")
         try:
             self.cur.execute('select * from usuarios;')
@@ -123,18 +125,26 @@ class Users():
             elif name2:
                 self.cur.execute(f'update usuarios set nombre2 = "{name2}" where ID = {id};')
             
+            elif name3:
+                self.cur.execute(f'update usuarios set nombre3 = "{name3}" where ID = {id};')
+
             elif lastname:
                 self.cur.execute(f'update usuarios set apellido = "{lastname}" where ID = {id};')
             
             elif lastname2:
                 self.cur.execute(f'update usuarios set apellido2 = "{lastname2}" where ID = {id};')
             
+            elif lastname3:
+                self.cur.execute(f'update usuarios set apellido3 = "{lastname3}" where ID = {id};')
+
             elif email:
                 self.cur.execute(f'update usuarios set correo = "{email}" where ID = {id};')
 
             elif cedula:
                 self.cur.execute(f'update usuarios set cedula = {cedula} where ID = {id};')
-            
+
+            elif password:
+                self.cur.execute(f'update usuarios set contrasenna = "{password}" where ID = {id};')
             #I want to do an elif where you can read two values at the same time as True
 
             return True     

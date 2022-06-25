@@ -78,5 +78,9 @@ class Test(unittest.TestCase):
     res = requests.delete(f"{HOST}/forms/{form['id']}")
     result = res.json()
     self.assertTrue(result['success'])
+
+  def test_mod_user(self):
+    
+    return
     
 unittest.main()
