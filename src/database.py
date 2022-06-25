@@ -13,7 +13,8 @@ class DB:
             host = "127.0.0.1",
             port = 3306,
             )
-        
+            conn.autocommit = True
+            
             print ("[!] Database successfully loaded!")
 
         except mariadb.Error as e:
