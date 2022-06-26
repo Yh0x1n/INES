@@ -9,7 +9,7 @@ import util
 from database import ines_db
 
 # ROUTERS 
-from routers import forms, users
+from routers import auth, users, forms
 
 
 '''MAIN APP SECTION'''
@@ -23,14 +23,11 @@ ines.add_middleware(
     allow_headers=["*"],
 )
 
+ines.include_router(auth.router)
 ines.include_router(users.router)
 ines.include_router(forms.router)
 
 '''USERS SECTION'''
-
-def generate_token(x : util.token_generator()): 
-    token = x.gen_token
-    return token
 
 @ines.get('/say')
 def say():

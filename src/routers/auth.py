@@ -15,18 +15,18 @@ router = APIRouter()
 def auth(data: userAuth):
     """Verify user email and password, 
     if both are valid, return a random token"""
+    print(f'[!] Authenticating user with: {data}')
     try:
-        user = ines_db.get_user(data.email)
-        print({ 'auth': auth, 'user': user})
-        # exists a user with that email
+        user = ines_db.users.get(data.email, by='email')
+        print({ 'auth': data, 'user': user})
 
         if data.password == user['password']:
             # the email and password are valid
-            token = generate_token()
-            return { 'user': user, 'token': token }
+            token = util.token_generator()
+            return { 'success': True, 'user': user, 'token': token }
 
-        return { 'err': 'password' }
+        return { 'success': False, 'err': 'password' }
     except KeyError:
-        return { 'err': 'email' }    
+        return { 'success': False, 'err': 'email' }    
 
     return res

@@ -24,7 +24,7 @@ class New_user(BaseModel):
     password: str
     cedula: int
 
-@router.post('/regist')
+@router.post('/users')
 def regist_user(new_user: New_user):
     '''Registers the user in the system and saves 
     them into the database
@@ -48,7 +48,6 @@ def mod_user(id : int, name : str = None, name2 : str = None, lastname : str = N
     except mariadb.Error as e:
         print ('[!] There was an error during this action.\n')
         return e
-
 
 @router.get('/users')
 def get_user(id: str):

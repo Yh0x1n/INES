@@ -10,15 +10,8 @@ class id_generator():
     gen_id = ''.join(random.sample(numbers, len))
 
 class userAuth(BaseModel):
-    id = id_generator.gen_id
-    name : str
-    name2 : str
-    lastname : str
-    lastname2 : str
     email : str
     password : str
-    cedula : int
-    is_admin : bool
 
 class Contracts(BaseModel):
     id = id_generator.gen_id
@@ -89,26 +82,35 @@ class Users():
         return True
 
     #TO-DO: Finish later
-    def get(self, id): 
+    def get(self, value, by="id"): 
         """Function to get user by it's ID, and 
         shows name and last name"""
-        print (f"[!] Finding user with the ID {id}")
+        print (f"[!] Finding user by {by}: {value}")
         try:
-            self.cur.execute(f"select * from usuarios where ID = {id}")
-            user = self.cur.fetchall()[0]
-            users_dict = {
-                'id': user[0],
-                'name' : user[2], 
-                'lastname' : user[5]
+            #TO-DO: Change for a match
+            if by == 'id':
+                self.cur.execute(f"select * from usuarios where ID = {id}")
+            elif by == 'email':
+                self.cur.execute(f'select * from usuarios where correo = "{value}"')
+            
+            tuple_user = self.cur.fetchall()[0]
+            
+            print(f'the tuple_user is: {tuple_user}')
+
+            user = {
+                'id': tuple_user[0],
+                'email': tuple_user[1],
+                'password': tuple_user[2],
+                'name' : tuple_user[2],
+                'lastname' : tuple_user[5]
             }
 
-            print (users_dict)
-            return f"The user is: {user[2]} {user[5]}; ID: {id}"
+            return user
 
         except mariadb.Error as e:
             print ("[Error] There was an error during this action.")
             print (e)
-            return False        
+            return {}
 
     #Function to modify user based on different conditions (still on test phase)
     def mod_user(self, name, name2, lastname, lastname2, email, cedula, id):
