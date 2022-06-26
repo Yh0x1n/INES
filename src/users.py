@@ -52,8 +52,8 @@ class Users():
             self.cur.execute('''INSERT INTO usuarios (
                 id, nombre, nombre2,nombre3,
                 apellido, apellido2, apellido3,
-                correo, contrasenna, cedula, es_admin
-                ) VALUES (?,?,?,?,?,?,?,?,?,?,?)''', (
+                correo, contrasenna, cedula, nacimiento, es_admin
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)''', (
                     new_user.id, 
                     new_user.name, 
                     new_user.name2, 
@@ -64,6 +64,7 @@ class Users():
                     new_user.email, 
                     new_user.password, 
                     new_user.cedula,
+                    new_user.bday,
                     new_user.is_admin)
                     )
         except mariadb.Error as e:

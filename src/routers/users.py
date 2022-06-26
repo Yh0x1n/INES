@@ -20,6 +20,7 @@ class New_user(BaseModel):
     email: str
     password: str
     cedula: int
+    bday: str
     is_admin : Optional[int]
 
 @router.post('/users')
