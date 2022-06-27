@@ -22,16 +22,6 @@ class Teachers(BaseModel):
     userID : str
     contract : str
 
-class Majors(BaseModel):
-    code : str
-    name : str
-
-class Subjects(BaseModel):
-    code : str
-    name : str
-    teacher_ID = int
-    major_code = str
-
 class Evaluators(BaseModel):
     id = id_generator.gen_id
     userID : str
@@ -44,8 +34,8 @@ class Instruments(BaseModel):
 
 class Users():
     """docstring for Users"""
-    def __init__(self, db_cursors):
-        self.cur = db_cursors
+    def __init__(self, db_cursor):
+        self.cur = db_cursor
 
     def insert(self, new_user):
         try:
@@ -87,7 +77,7 @@ class Users():
         return True
 
     #TO-DO: Finish later
-    def get(self, value, by="id"): 
+    def get(self, value, by = "id"): 
         """Function to get user by it's ID, and 
         shows name and last name"""
         print (f"[!] Finding user by {by}: {value}")
@@ -118,10 +108,10 @@ class Users():
             return {}
 
     #Function to modify user based on different conditions (still on test phase)
-    def mod_user(self, name, name2, name3,
+    def mod_user(self, id, name, name2, name3,
                 lastname, lastname2, lastname3,
-                email, cedula, id, password,):
-        print ("[!] Modifying user...")
+                email, cedula, password,):
+        print (f"[!] Modifying user by ID: {id}")
         try:
             self.cur.execute('select * from usuarios;')
             if name:

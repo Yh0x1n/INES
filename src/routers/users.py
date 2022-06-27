@@ -20,7 +20,7 @@ class New_user(BaseModel):
     email: str
     password: str
     cedula: int
-    bday: str
+    bday: Optional[str]
     is_admin : Optional[int]
 
 @router.post('/users')
@@ -36,12 +36,15 @@ def regist_user(new_user: New_user):
 
     return {'success': True, 'new_user': new_user}
 
-@router.put('/users') #Function to modify user
-def mod_user(id : int, name : str = None, name2 : str = None, lastname : str = None, lastname2 : str = None,
-            email : str = None, cedula : int = None):
+@router.put('/users_modify') #Function to modify user
+def mod_user(id : int, name : str = None, name2 : str = None, name3 : str = None,
+            lastname : str = None, lastname2 : str = None, lastname3 : str = None,
+            email : str = None, cedula : int = None, password : str = None):
     '''Modifies the user in the database'''
     try:
-        res = ines_db.mod_user(name, name2, lastname, lastname2, email, cedula, id)
+        res = ines_db.users.mod_user(id, name, name2, name3, 
+                            lastname, lastname2, lastname3,
+                             email, cedula, password)
         return res
 
     except mariadb.Error as e:
@@ -53,7 +56,7 @@ def get_user(id: str):
     print(f'[!] user id: {id}')
     try:
         print ('[!] Getting user...')
-        res = ines_db.get_user(id)
+        res = ines_db.users.get(id)
         return res
     
     except mariadb.Error as e:

@@ -7,7 +7,7 @@ PORT = 8000
 HOST = f"http://localhost:{PORT}"
 
 class Test(unittest.TestCase):
-  
+    
   #unittest.skip('')
   def test_user_routes(self):
     # REGIST...
@@ -17,7 +17,9 @@ class Test(unittest.TestCase):
       "lastname": "acida",
       "email": "guarapita_dulce@gmail.com",
       "password": "caroreña",
-      "cedula": 12345
+      "cedula": 12345,
+      "bday": "2001-05-04",
+      "is_admin": 0
     }
     
     res = requests.post(f"{HOST}/users", data=json.dumps(user))
@@ -42,6 +44,18 @@ class Test(unittest.TestCase):
     self.assertEqual(result['user']['id'], user['id'])
     self.assertEqual((len(result['token']) > 7), True)
 
+    # now, MODIFY (still on idea phase)
+    print ("[!] Modifying user...")
+
+    usermod = {
+      "correo" : "vivachavez@gmail.com"
+    }
+
+    res = requests.put(f"{HOST}/users_modify", data = json.dumps(usermod))
+    
+    result = res.json()
+    self.assertTrue(result['success'])
+
     # now, DELETE..., if is 0 not run
     if 1:
       print('[t] deleting user...')
@@ -56,7 +70,6 @@ class Test(unittest.TestCase):
       "name": "Formulario de Douglas",
       "items": '{"msg": "hola mundo"}',
       "id_creator": "1"
-      
     }
     
     res = requests.post(f"{HOST}/forms", data=json.dumps(form))
@@ -78,5 +91,5 @@ class Test(unittest.TestCase):
     res = requests.delete(f"{HOST}/forms/{form['id']}")
     result = res.json()
     self.assertTrue(result['success'])
-    
+
 unittest.main()
