@@ -29,7 +29,7 @@ class DB:
             sys.exit(1)
         
         #Get cursor
-        self.cur = conn.cursor()
+        self.cur = conn.cursor(dictionary=True)
         self.users = Users(self.cur)
         self.forms = Forms(self.cur)
         

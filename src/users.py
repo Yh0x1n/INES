@@ -88,16 +88,16 @@ class Users():
             elif by == 'email':
                 self.cur.execute(f'select * from usuarios where correo = "{value}"')
             
-            tuple_user = self.cur.fetchall()[0]
+            dic_user = self.cur.fetchall()[0]
             
-            print(f'the tuple_user is: {tuple_user}')
+            print(f'the dic_user is: {dic_user}')
 
             user = {
-                'id': tuple_user[0],
-                'email': tuple_user[1],
-                'password': tuple_user[2],
-                'name' : tuple_user[2],
-                'lastname' : tuple_user[5]
+                'id': dic_user['ID'],
+                'email': dic_user['correo'],
+                'password': dic_user['contrasenna'],
+                'name' : dic_user['nombre'],
+                'lastname' : dic_user['apellido']
             }
 
             return user
