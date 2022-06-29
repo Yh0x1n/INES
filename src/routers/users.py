@@ -28,6 +28,7 @@ def regist_user(new_user: New_user):
     '''Registers the user in the system and saves 
     them into the database
     '''
+
     new_user.id = util.random_id()
     print(f'[!] Registing user with id: {new_user.id}')
 
@@ -36,32 +37,45 @@ def regist_user(new_user: New_user):
 
     return {'success': True, 'new_user': new_user}
 
-@router.put('/users_modify') #Function to modify user
-def mod_user(id : int, name : str = None, name2 : str = None, name3 : str = None,
-            lastname : str = None, lastname2 : str = None, lastname3 : str = None,
-            email : str = None, cedula : int = None, password : str = None):
+class Update_user(BaseModel):
+    name: Optional[str]
+    name2: Optional[str]
+    name3: Optional[str]
+    lastname: Optional[str]
+    lastname2: Optional[str]
+    lastname3: Optional[str]
+    email: Optional[str]
+    password: Optional[str]
+    cedula: Optional[str]
+    bday: Optional[str]
+    is_admin : Optional[int]
+
+@router.post('/users/{id}') #Function to modify user
+def mod_user(id:str, new_data:Update_user):
     '''Modifies the user in the database'''
+    print(f'[!] Modifiging user {id}...')
     try:
-        res = ines_db.users.mod_user(id, name, name2, name3, 
-                            lastname, lastname2, lastname3,
-                             email, cedula, password)
-        return res
+        if ines_db.users.mod_user(id, new_data):
+            return {'success': True, 'user': new_data}
 
     except mariadb.Error as e:
         print ('[!] There was an error during this action.\n')
         return e
-@router.get('/users')
+
+    return {'success': False}
+
+@router.get('/users/{id}')
 def get_user(id: str):
     '''Obtains the user from the database'''
     print(f'[!] user id: {id}')
     try:
         print ('[!] Getting user...')
         res = ines_db.users.get(id)
-        return res
+        return {'success': True, 'user': res}
     
     except mariadb.Error as e:
         print ('[!] There was an error during this action.\n')
-        return e
+        return {'success': False, 'err': e}
 
 @router.delete('/users/{id}') #Function to delete user from the database
 def del_user(id : int):

@@ -41,7 +41,7 @@ class DB:
         #Creating DB tables by SQL commands, in case they don't exist
         self.cur.execute('CREATE TABLE if NOT EXISTS usuarios ('
                         'ID INT (10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,'
-                        'correo VARCHAR(50) NOT NULL,'
+                        'correo VARCHAR(50) NOT NULL UNIQUE,'
                         'contrasenna VARCHAR (50) NOT NULL,'
                         'nombre VARCHAR (50) NOT NULL,'
                         'nombre2 VARCHAR (50) NULL,'
