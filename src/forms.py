@@ -8,13 +8,13 @@ class Forms:
         print(f'[!database] finding form with id: {id}')
         # WARING: update to prevent SQL injection atacks
         self.cur.execute(f'SELECT * FROM instrumentos WHERE ID = {id};')
-        tuple_form = self.cur.fetchall()[0]
-        print(f'[!] the tuple_form is: {tuple_form}')
+        dic_form = self.cur.fetchall()[0]
+        print(f'[!] the dic_form is: {dic_form}')
 
         form = {
-            'id': tuple_form[0],
-            'name': tuple_form[1],
-            'items': tuple_form[2],
+            'id': dic_form['ID'],
+            'name': dic_form['nombre'],
+            'items': dic_form['preguntas'],
         }
 
         return form
