@@ -84,20 +84,20 @@ class Users():
         try:
             #TO-DO: Change for a match
             if by == 'id':
-                self.cur.execute(f"select * from usuarios where ID = {id}")
+                self.cur.execute(f"select * from usuarios where ID = {value}")
             elif by == 'email':
                 self.cur.execute(f'select * from usuarios where correo = "{value}"')
             
-            tuple_user = self.cur.fetchall()[0]
+            dic_user = self.cur.fetchall()[0]
             
-            print(f'the tuple_user is: {tuple_user}')
+            print(f'the dic_user is: {dic_user}')
 
             user = {
-                'id': tuple_user[0],
-                'email': tuple_user[1],
-                'password': tuple_user[2],
-                'name' : tuple_user[2],
-                'lastname' : tuple_user[5]
+                'id': dic_user['ID'],
+                'email': dic_user['correo'],
+                'password': dic_user['contrasenna'],
+                'name' : dic_user['nombre'],
+                'lastname' : dic_user['apellido']
             }
 
             return user
@@ -108,38 +108,36 @@ class Users():
             return {}
 
     #Function to modify user based on different conditions (still on test phase)
-    def mod_user(self, id, name, name2, name3,
-                lastname, lastname2, lastname3,
-                email, cedula, password,):
+    def mod_user(self, id, new_data):
         print (f"[!] Modifying user by ID: {id}")
         try:
             self.cur.execute('select * from usuarios;')
-            if name:
-                self.cur.execute(f'update usuarios set nombre = "{name}" where ID = {id};')
+            if new_data.name:
+                self.cur.execute(f'update usuarios set nombre = "{new_data.name}" where ID = {id};')
             
-            elif name2:
-                self.cur.execute(f'update usuarios set nombre2 = "{name2}" where ID = {id};')
+            elif new_data.name2:
+                self.cur.execute(f'update usuarios set nombre2 = "{new_data.name2}" where ID = {id};')
             
-            elif name3:
-                self.cur.execute(f'update usuarios set nombre3 = "{name3}" where ID = {id};')
+            elif new_data.name3:
+                self.cur.execute(f'update usuarios set nombre3 = "{new_data.name3}" where ID = {id};')
             
-            elif lastname:
-                self.cur.execute(f'update usuarios set apellido = "{lastname}" where ID = {id};')
+            elif new_data.lastname:
+                self.cur.execute(f'update usuarios set apellido = "{new_data.lastname}" where ID = {id};')
             
-            elif lastname2:
-                self.cur.execute(f'update usuarios set apellido2 = "{lastname2}" where ID = {id};')
+            elif new_data.lastname2:
+                self.cur.execute(f'update usuarios set apellido2 = "{new_data.lastname2}" where ID = {id};')
             
-            elif lastname3:
-                self.cur.execute(f'update usuarios set apellido3 = "{lastname3}" where ID = {id};')
+            elif new_data.lastname3:
+                self.cur.execute(f'update usuarios set apellido3 = "{new_data.lastname3}" where ID = {id};')
             
-            elif email:
-                self.cur.execute(f'update usuarios set correo = "{email}" where ID = {id};')
+            elif new_data.email:
+                self.cur.execute(f'update usuarios set correo = "{new_data.email}" where ID = {id};')
 
-            elif cedula:
-                self.cur.execute(f'update usuarios set cedula = {cedula} where ID = {id};')
+            elif new_data.cedula:
+                self.cur.execute(f'update usuarios set cedula = {new_data.cedula} where ID = {id};')
             
-            elif password:
-                self.cur.execute(f'update usuarios set contrasenna = "{password}" where ID = {id};')
+            elif new_data.password:
+                self.cur.execute(f'update usuarios set contrasenna = "{new_data.password}" where ID = {id};')
             
             
             #I want to do an elif where you can read two values at the same time as True

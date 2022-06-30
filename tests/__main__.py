@@ -48,13 +48,17 @@ class Test(unittest.TestCase):
     print ("[!] Modifying user...")
 
     usermod = {
-      "correo" : "vivachavez@gmail.com"
+      "email" : "vivachavez@gmail.com"
     }
 
-    res = requests.put(f"{HOST}/users_modify", data = json.dumps(usermod))
-    
+    res = requests.post(f"{HOST}/users/{user['id']}", data = json.dumps(usermod))
     result = res.json()
     self.assertTrue(result['success'])
+    self.assertEqual(result['user']['email'], usermod['email'])
+
+    res = requests.get(f"{HOST}/users/{user['id']}", data = json.dumps(usermod))
+    result = res.json()
+    self.assertEqual(result['user']['email'], usermod['email'])
 
     # now, DELETE..., if is 0 not run
     if 1:
