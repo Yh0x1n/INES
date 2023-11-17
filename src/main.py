@@ -1,5 +1,13 @@
 #INES
 #by Yhoxin Rossell, Hernán Guerrero and Douglas Socorro
+'''
+Querido programador:
+
+Durante la creación de este código, solo Dios y yo sabíamos cómo funciona;
+Ahora solo Dios lo sabe.
+Buena suerte. :)
+'''
+
 import mariadb
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
